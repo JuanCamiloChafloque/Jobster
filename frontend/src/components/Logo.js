@@ -1,6 +1,5 @@
-import icon from "../assets/images/icon.png";
-
 import React from "react";
+import icon from "../assets/images/icon.png";
 
 const Logo = () => {
   return (

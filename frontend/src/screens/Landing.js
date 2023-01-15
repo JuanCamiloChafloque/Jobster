@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import main from "../assets/images/logo.svg";
 import Logo from "../components/Logo";
@@ -20,7 +21,9 @@ const Landing = () => {
             based on their pending, completed and rejected
             interviews/applications
           </p>
-          <button className="btn btn-hero">Login/Register</button>
+          <Link to="/register" className="btn btn-hero">
+            Login/Register
+          </Link>
         </div>
         <img src={main} alt="main" />
       </div>
