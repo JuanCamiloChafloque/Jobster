@@ -4,10 +4,18 @@ import errorHandlerMiddleware from "./middleware/error-handler.js";
 import notFoundMiddleware from "./middleware/not-found.js";
 import connectDB from "./db/database.js";
 
+//Routes
+import authRoutes from "./routes/authRoutes.js";
+
 dotenv.config();
 const app = express();
 
 const port = process.env.PORT || 5000;
+
+//JSON
+app.use(express.json());
+
+app.use("/api/v1/auth", authRoutes);
 
 //Middleware
 connectDB();
