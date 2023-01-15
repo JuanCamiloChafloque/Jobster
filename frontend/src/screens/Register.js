@@ -3,26 +3,35 @@ import styled from "styled-components";
 import FormRow from "../components/FormRow";
 import Alert from "../components/Alert";
 import icon from "../assets/images/icon.png";
+import { useAppContext } from "../context/appContext";
 
 const initialState = {
   name: "",
   email: "",
   password: "",
   isMember: false,
-  showAlert: true,
 };
 
 const Register = () => {
   const [values, setValues] = useState(initialState);
-
-  const handleChange = (e) => {};
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-  };
+  const { isLoading, showAlert, displayAlert } = useAppContext();
 
   const toggleMember = () => {
     setValues({ ...values, isMember: !values.isMember });
+  };
+
+  const handleChange = (e) => {
+    setValues({ ...values, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const { name, email, password, isMember } = values;
+    if (!email || !password || (!isMember && !name)) {
+      displayAlert();
+      return;
+    }
+    console.log(values);
   };
 
   return (
@@ -32,26 +41,26 @@ const Register = () => {
           <img src={icon} alt="icon" />
           <h3>{values.isMember ? "Login" : "Register"}</h3>
         </div>
-        {values.showAlert && <Alert />}
+        {showAlert && <Alert />}
         {!values.isMember && (
           <FormRow
             type="text"
             value={values.name}
             name="name"
-            onChange={handleChange}
+            handleChange={handleChange}
           />
         )}
         <FormRow
           type="email"
           value={values.email}
           name="email"
-          onChange={handleChange}
+          handleChange={handleChange}
         />
         <FormRow
           type="password"
           value={values.password}
           name="password"
-          onChange={handleChange}
+          handleChange={handleChange}
         />
         <button type="submit" className="btn btn-block">
           Submit
