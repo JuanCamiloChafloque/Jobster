@@ -6,6 +6,7 @@ import connectDB from "./db/database.js";
 
 //Routes
 import authRoutes from "./routes/authRoutes.js";
+import jobRoutes from "./routes/jobsRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -16,6 +17,7 @@ const port = process.env.PORT || 5000;
 app.use(express.json());
 
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/jobs", jobRoutes);
 
 //Middleware
 connectDB();
