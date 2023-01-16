@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useAppContext } from "../context/appContext";
 import { FaAlignLeft, FaUserCircle, FaCaretDown } from "react-icons/fa";
-import Logo from "./Logo";
 import styled from "styled-components";
 
 const Navbar = () => {
@@ -15,7 +14,6 @@ const Navbar = () => {
           <FaAlignLeft />
         </button>
         <div>
-          <Logo />
           <h3 className="logo-text">Dashboard</h3>
         </div>
         <div className="btn-container">
