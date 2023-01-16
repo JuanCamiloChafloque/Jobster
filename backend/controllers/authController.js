@@ -23,6 +23,7 @@ export const register = async (req, res) => {
       location: user.location,
     },
     token: token,
+    location: user.location,
   });
 };
 
