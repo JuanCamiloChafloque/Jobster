@@ -22,6 +22,10 @@ import {
   GET_JOBS_BEGIN,
   GET_JOBS_SUCCESS,
   SET_EDIT_JOB,
+  DELETE_JOB_BEGIN,
+  EDIT_JOB_BEGIN,
+  EDIT_JOB_ERROR,
+  EDIT_JOB_SUCCESS,
 } from "./actions";
 import reducer from "./reducer";
 
@@ -196,9 +200,49 @@ const AppProvider = ({ children }) => {
     dispatch({ type: SET_EDIT_JOB, payload: id });
   };
 
-  const editJob = () => {};
+  const editJob = async () => {
+    dispatch({ type: EDIT_JOB_BEGIN });
+    try {
+      const { position, company, jobLocation, jobType, status } = state;
+      await axios.patch(
+        "/api/v1/jobs/" + state.editJobId,
+        {
+          position,
+          company,
+          jobLocation,
+          jobType,
+          status,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      dispatch({ type: EDIT_JOB_SUCCESS });
+      dispatch({ type: CLEAR_VALUES });
+    } catch (err) {
+      dispatch({
+        type: EDIT_JOB_ERROR,
+        payload: { message: err.response.data.message },
+      });
+    }
+    clearAlert();
+  };
 
-  const deleteJob = (id) => {};
+  const deleteJob = async (id) => {
+    dispatch({ type: DELETE_JOB_BEGIN });
+    try {
+      await axios.delete("/api/v1/jobs/" + id, {
+        headers: {
+          Authorization: `Bearer ${state.token}`,
+        },
+      });
+      getAllJobs();
+    } catch (err) {
+      logoutUser();
+    }
+  };
 
   const handleChange = ({ name, value }) => {
     dispatch({ type: HANDLE_CHANGE, payload: { name, value } });
