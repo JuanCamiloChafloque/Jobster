@@ -19,6 +19,8 @@ import {
   CREATE_JOB_BEGIN,
   CREATE_JOB_SUCCESS,
   CREATE_JOB_ERROR,
+  GET_JOBS_BEGIN,
+  GET_JOBS_SUCCESS,
 } from "./actions";
 import reducer from "./reducer";
 
@@ -43,6 +45,10 @@ const initialState = {
   jobType: "full-time",
   statusOptions: ["pending", "interview", "declined"],
   status: "pending",
+  jobs: [],
+  totalJobs: 0,
+  numOfPages: 1,
+  page: 1,
   showSidebar: false,
 };
 
@@ -165,6 +171,30 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  const getAllJobs = async () => {
+    let url = "/api/v1/jobs";
+    dispatch({ type: GET_JOBS_BEGIN });
+    try {
+      const { data } = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const { jobs, totalJobs, numOfPages } = data;
+      dispatch({
+        type: GET_JOBS_SUCCESS,
+        payload: { jobs, totalJobs, numOfPages },
+      });
+    } catch (err) {
+      logoutUser();
+    }
+    clearAlert();
+  };
+
+  const setEditJob = (id) => {};
+
+  const deleteJob = (id) => {};
+
   const handleChange = ({ name, value }) => {
     dispatch({ type: HANDLE_CHANGE, payload: { name, value } });
   };
@@ -183,6 +213,9 @@ const AppProvider = ({ children }) => {
         logoutUser,
         updateUser,
         createJob,
+        getAllJobs,
+        setEditJob,
+        deleteJob,
         toggleSidebar,
         handleChange,
         clearValues,
