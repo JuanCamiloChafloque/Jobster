@@ -1,13 +1,8 @@
 import React from "react";
-import icon from "../assets/images/icon.png";
+import icon from "../assets/images/jobster.png";
 
 const Logo = () => {
-  return (
-    <>
-      <img src={icon} alt="icon" className="logo" />
-      <h3>Jobster</h3>
-    </>
-  );
+  return <img src={icon} alt="icon" className="logo" width="150" />;
 };
 
 export default Logo;

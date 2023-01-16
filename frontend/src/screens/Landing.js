@@ -2,19 +2,20 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import main from "../assets/images/logo.svg";
-import Logo from "../components/Logo";
+import logo from "../assets/images/icon.png";
 
 const Landing = () => {
   return (
     <Wrapper>
-      <nav>
-        <Logo />
-      </nav>
+      <nav></nav>
       <div className="container page">
         <div className="info">
-          <h3>
-            Job <span>Tracking</span> App
-          </h3>
+          <div>
+            <img src={logo} alt="logo" />
+            <h3>
+              <span>Jobster</span> - A Job Tracking App
+            </h3>
+          </div>
           <p>
             An app that helps students and graduates keep track of their
             progress during their job hunting process by seeing their stats
