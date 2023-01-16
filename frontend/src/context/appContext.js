@@ -14,6 +14,11 @@ import {
   UPDATE_USER_ERROR,
   TOGGLE_SIDEBAR,
   LOGOUT_USER,
+  HANDLE_CHANGE,
+  CLEAR_VALUES,
+  CREATE_JOB_BEGIN,
+  CREATE_JOB_SUCCESS,
+  CREATE_JOB_ERROR,
 } from "./actions";
 import reducer from "./reducer";
 
@@ -23,13 +28,21 @@ const userLocation = localStorage.getItem("location");
 
 const initialState = {
   isLoading: false,
+  isEditing: false,
   showAlert: false,
   alertText: "",
   alertType: "",
   user: user ? JSON.parse(user) : null,
   token: token,
   userLocation: userLocation || "",
+  editJobId: "",
+  position: "",
+  company: "",
   jobLocation: userLocation || "",
+  jobTypeOptions: ["full-time", "part-time", "remote", "internship"],
+  jobType: "full-time",
+  statusOptions: ["pending", "interview", "declined"],
+  status: "pending",
   showSidebar: false,
 };
 
@@ -131,6 +144,35 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  const createJob = async () => {
+    dispatch({ type: CREATE_JOB_BEGIN });
+    try {
+      const { position, company, jobLocation, jobType, status, token } = state;
+      const newJob = { position, company, jobLocation, jobType, status };
+      await axios.post("api/v1/jobs", newJob, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      dispatch({ type: CREATE_JOB_SUCCESS });
+      dispatch({ type: CLEAR_VALUES });
+    } catch (err) {
+      dispatch({
+        type: CREATE_JOB_ERROR,
+        payload: { message: err.response.data.message },
+      });
+    }
+    clearAlert();
+  };
+
+  const handleChange = ({ name, value }) => {
+    dispatch({ type: HANDLE_CHANGE, payload: { name, value } });
+  };
+
+  const clearValues = () => {
+    dispatch({ type: CLEAR_VALUES });
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -140,7 +182,10 @@ const AppProvider = ({ children }) => {
         loginUser,
         logoutUser,
         updateUser,
+        createJob,
         toggleSidebar,
+        handleChange,
+        clearValues,
       }}
     >
       {children}
