@@ -1,12 +1,11 @@
 import React from "react";
 import { useAppContext } from "../context/appContext";
-import { FaTimes } from "react-icons/fa";
 import Logo from "./Logo";
 import styled from "styled-components";
 import NavLinks from "./NavLinks";
 
 const BigSidebar = () => {
-  const { showSidebar, toggleSidebar } = useAppContext();
+  const { showSidebar } = useAppContext();
 
   return (
     <Wrapper>

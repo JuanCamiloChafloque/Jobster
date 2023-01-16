@@ -14,7 +14,12 @@ export const createJob = async (req, res, next) => {
   res.status(StatusCodes.CREATED).json({ job });
 };
 
-export const getAllJobs = async (req, res, next) => {};
+export const getAllJobs = async (req, res, next) => {
+  const jobs = await Job.find({ createdBy: req.user.userId });
+  res
+    .status(StatusCodes.OK)
+    .json({ jobs, totalJobs: jobs.length, numOfPages: 1 });
+};
 
 export const showStats = async (req, res, next) => {};
 
