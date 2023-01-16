@@ -1,4 +1,5 @@
 import Job from "../models/Job.js";
+import mongoose from "mongoose";
 import { StatusCodes } from "http-status-codes";
 import checkPermissions from "../utils/checkPermissions.js";
 import BadRequestError from "../errors/BadRequestError.js";
@@ -22,7 +23,28 @@ export const getAllJobs = async (req, res, next) => {
     .json({ jobs, totalJobs: jobs.length, numOfPages: 1 });
 };
 
-export const showStats = async (req, res, next) => {};
+export const showStats = async (req, res, next) => {
+  let stats = await Job.aggregate([
+    { $match: { createdBy: mongoose.Types.ObjectId(req.user.userId) } },
+    { $group: { _id: "$status", count: { $sum: 1 } } },
+  ]);
+
+  stats = stats.reduce((acc, curr) => {
+    const { _id: title, count } = curr;
+    acc[title] = count;
+    return acc;
+  }, {});
+
+  const defaultStats = {
+    pending: stats.pending || 0,
+    interview: stats.interview || 0,
+    declined: stats.declined || 0,
+  };
+
+  let monthlyApplications = [];
+
+  res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications });
+};
 
 export const deleteJob = async (req, res, next) => {
   const { id: jobId } = req.params;
