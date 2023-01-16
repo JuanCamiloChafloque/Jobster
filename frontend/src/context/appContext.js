@@ -9,6 +9,9 @@ import {
   LOGIN_USER_BEGIN,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
+  UPDATE_USER_BEGIN,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_ERROR,
   TOGGLE_SIDEBAR,
   LOGOUT_USER,
 } from "./actions";
@@ -105,6 +108,29 @@ const AppProvider = ({ children }) => {
     removeUserFromLocalStorage();
   };
 
+  const updateUser = async (currentUser) => {
+    dispatch({ type: UPDATE_USER_BEGIN });
+    try {
+      const { data } = await axios.patch("api/v1/auth/update", currentUser, {
+        headers: {
+          Authorization: `Bearer ${state.token}`,
+        },
+      });
+      const { user, token, location } = data;
+      dispatch({
+        type: UPDATE_USER_SUCCESS,
+        payload: { user, token, location },
+      });
+      addUserToLocalStorage({ user, token, location });
+    } catch (err) {
+      dispatch({
+        type: UPDATE_USER_ERROR,
+        payload: { message: err.response.data.message },
+      });
+    }
+    clearAlert();
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -113,6 +139,7 @@ const AppProvider = ({ children }) => {
         registerUser,
         loginUser,
         logoutUser,
+        updateUser,
         toggleSidebar,
       }}
     >
