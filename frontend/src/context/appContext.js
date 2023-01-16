@@ -9,6 +9,8 @@ import {
   LOGIN_USER_BEGIN,
   LOGIN_USER_SUCCESS,
   LOGIN_USER_ERROR,
+  TOGGLE_SIDEBAR,
+  LOGOUT_USER,
 } from "./actions";
 import reducer from "./reducer";
 
@@ -25,6 +27,7 @@ const initialState = {
   token: token,
   userLocation: userLocation || "",
   jobLocation: userLocation || "",
+  showSidebar: false,
 };
 
 const AppContext = React.createContext();
@@ -53,6 +56,10 @@ const AppProvider = ({ children }) => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     localStorage.removeItem("location");
+  };
+
+  const toggleSidebar = () => {
+    dispatch({ type: TOGGLE_SIDEBAR });
   };
 
   const registerUser = async (newUser) => {
@@ -93,9 +100,21 @@ const AppProvider = ({ children }) => {
     clearAlert();
   };
 
+  const logoutUser = () => {
+    dispatch({ type: LOGOUT_USER });
+    removeUserFromLocalStorage();
+  };
+
   return (
     <AppContext.Provider
-      value={{ ...state, displayAlert, registerUser, loginUser }}
+      value={{
+        ...state,
+        displayAlert,
+        registerUser,
+        loginUser,
+        logoutUser,
+        toggleSidebar,
+      }}
     >
       {children}
     </AppContext.Provider>
