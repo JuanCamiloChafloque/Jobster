@@ -28,6 +28,7 @@ import {
   EDIT_JOB_SUCCESS,
   SHOW_STATS_BEGIN,
   SHOW_STATS_SUCCESS,
+  CLEAR_FILTERS,
 } from "./actions";
 import reducer from "./reducer";
 
@@ -58,6 +59,11 @@ const initialState = {
   page: 1,
   stats: {},
   monthlyApplications: [],
+  search: "",
+  searchStatus: "all",
+  searchType: "all",
+  sort: "latest",
+  sortOptions: ["latest", "oldest", "a-z", "z-a"],
   showSidebar: false,
 };
 
@@ -181,7 +187,10 @@ const AppProvider = ({ children }) => {
   };
 
   const getAllJobs = async () => {
-    let url = "/api/v1/jobs";
+    const { search, searchStatus, searchType, sort } = state;
+    let url = `/api/v1/jobs?status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
+    if (search) url = url + `&search=${search}`;
+
     dispatch({ type: GET_JOBS_BEGIN });
     try {
       const { data } = await axios.get(url, {
@@ -195,7 +204,7 @@ const AppProvider = ({ children }) => {
         payload: { jobs, totalJobs, numOfPages },
       });
     } catch (err) {
-      logoutUser();
+      //logoutUser();
     }
     clearAlert();
   };
@@ -277,6 +286,10 @@ const AppProvider = ({ children }) => {
     dispatch({ type: CLEAR_VALUES });
   };
 
+  const clearFilters = () => {
+    dispatch({ type: CLEAR_FILTERS });
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -295,6 +308,7 @@ const AppProvider = ({ children }) => {
         toggleSidebar,
         handleChange,
         clearValues,
+        clearFilters,
       }}
     >
       {children}

@@ -7,7 +7,6 @@ import styled from "styled-components";
 const ChartContainer = () => {
   const [barChart, setBarChart] = useState(true);
   const { monthlyApplications: data } = useAppContext();
-  console.log(data);
 
   return (
     <Wrapper>
