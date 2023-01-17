@@ -26,6 +26,8 @@ import {
   EDIT_JOB_BEGIN,
   EDIT_JOB_ERROR,
   EDIT_JOB_SUCCESS,
+  SHOW_STATS_BEGIN,
+  SHOW_STATS_SUCCESS,
 } from "./actions";
 import reducer from "./reducer";
 
@@ -54,6 +56,8 @@ const initialState = {
   totalJobs: 0,
   numOfPages: 1,
   page: 1,
+  stats: {},
+  monthlyApplications: [],
   showSidebar: false,
 };
 
@@ -244,6 +248,27 @@ const AppProvider = ({ children }) => {
     }
   };
 
+  const showStats = async () => {
+    dispatch({ type: SHOW_STATS_BEGIN });
+    try {
+      const { data } = await axios.get("/api/v1/jobs/stats", {
+        headers: {
+          Authorization: `Bearer ${state.token}`,
+        },
+      });
+      dispatch({
+        type: SHOW_STATS_SUCCESS,
+        payload: {
+          stats: data.defaultStats,
+          monthlyApplications: data.monthlyApplications,
+        },
+      });
+    } catch (err) {
+      logoutUser();
+    }
+    clearAlert();
+  };
+
   const handleChange = ({ name, value }) => {
     dispatch({ type: HANDLE_CHANGE, payload: { name, value } });
   };
@@ -266,6 +291,7 @@ const AppProvider = ({ children }) => {
         setEditJob,
         editJob,
         deleteJob,
+        showStats,
         toggleSidebar,
         handleChange,
         clearValues,

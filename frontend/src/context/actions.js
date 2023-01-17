@@ -31,6 +31,9 @@ export const EDIT_JOB_ERROR = "EDIT_JOB_ERROR";
 
 export const DELETE_JOB_BEGIN = "DELETE_JOB_BEGIN";
 
+export const SHOW_STATS_BEGIN = "SHOW_STATS_BEGIN";
+export const SHOW_STATS_SUCCESS = "SHOW_STATS_SUCCESS";
+
 export const LOGOUT_USER = "LOGOUT_USER";
 
 export const TOGGLE_SIDEBAR = "TOGGLE_SIDEBAR";
