@@ -205,7 +205,7 @@ const AppProvider = ({ children }) => {
         payload: { jobs, totalJobs, numOfPages },
       });
     } catch (err) {
-      //logoutUser();
+      logoutUser();
     }
     clearAlert();
   };
